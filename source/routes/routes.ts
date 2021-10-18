@@ -4,6 +4,8 @@ import { authenticateToken } from '../utils/authenticate';
 import customerKYCController from '../controllers/customerKYCController';
 import company from '../controllers/companyController';
 import merchant from '../controllers/merchantController';
+import brand from '../controllers/brandController';
+import event from '../controllers/eventController';
 
 const router = express.Router();
 
@@ -22,5 +24,15 @@ router.post('/company/delete', company.deleteImage);
 router.post('/merchant/save', merchant.saveImage);
 router.post('/merchant/get', merchant.getImage);
 router.post('/merchant/delete', merchant.deleteImage);
+
+//----------------- Brand Router -----------------//
+router.post('/brand/save', brand.saveImage);
+router.post('/brand/get', brand.getImage);
+router.post('/brand/delete', brand.deleteImage);
+
+//----------------- Event Router -----------------//
+router.post('/event/save', event.saveImage);
+router.post('/event/get', event.getImage);
+router.post('/event/delete', event.deleteImage);
 
 export = router;

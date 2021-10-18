@@ -17,7 +17,7 @@ const setUpFolder = (folderName: any) => {
 const storage = multer.diskStorage({
     destination: function (req: any, file: any, callback: (arg0: null, arg1: string) => void) {
         // Set the destination where the files should be stored on disk
-        callback(null, `uploads/merchants`);
+        callback(null, `uploads/events`);
     },
     filename: function (req: any, file: { originalname: string; }, callback: (arg0: null, arg1: string) => void) {
         // Set the file name on the file in the uploads folder
@@ -32,18 +32,17 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage }).fields([{ name: 'avatar' }, { name: 'banner' }]);
+const upload = multer({ storage: storage }).single('image');
 
 const saveImage = (req: any, res: Response, next: NextFunction) => {
-    setUpFolder(`uploads/merchants`)
+    setUpFolder(`uploads/events`)
     try {
         upload(req, res, async function (err: any) {
             if (err) {
                 res.status(400).json({ message: err.message })
             } else {
-                let avatar = req.files.avatar && req.files.avatar[0].path || '';
-                let banner = req.files.banner && req.files.banner[0].path || '';
-                res.status(200).json({ message: 'Image Uploaded Successfully !', avatar: avatar, banner: banner})
+                let image = req.file;
+                res.status(200).json({ message: 'Image Uploaded Successfully !', image: image.path})
             }
         })
     } catch (err) {
@@ -81,12 +80,7 @@ const getImage = async (req: Request, res: Response, next: NextFunction) => {
 const deleteImage = async (req: Request, res: Response, next: NextFunction) => {
     try {
         let { path } = req.body;
-        if(typeof path === 'string'){
-            fs.unlinkSync(`./${path}`);
-        } else {
-            fs.unlinkSync(`./${path.avatar}`);
-            fs.unlinkSync(`./${path.banner}`);
-        }
+        fs.unlinkSync(`./${path}`);
         return res.status(200).json({
                     success: true,
                     message: 'Delete image successful!'
